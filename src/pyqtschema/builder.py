@@ -25,6 +25,8 @@ def is_any_of(schema: dict):
 def is_all_of(schema: dict):
     return 'allOf' in schema
 
+def is_const(schema: dict):
+    return "const" in schema
 
 class IBuilder:
     """ Defines a builder-interface """
@@ -52,6 +54,7 @@ class WidgetBuilder(IBuilder):
         "array": {"array": widgets.ArraySchemaWidget, "enum": widgets.EnumSchemaWidget},
         "enum": {"enum": widgets.EnumSchemaWidget},
         "anyOf": {"anyOf": widgets.AnyOfSchemaWidget, },
+        "const": {"const": widgets.ConstSchemaWidget, "enum": widgets.ConstSchemaWidget}
     }
 
     default_widget_variants = {
@@ -64,6 +67,7 @@ class WidgetBuilder(IBuilder):
         "enum": "enum",
         "anyOf": "anyOf",
         "directory-path": "dirpath",
+        "const": "const",
     }
 
     widget_variant_modifiers = {
@@ -111,7 +115,10 @@ class WidgetBuilder(IBuilder):
     def create_widget(self, schema: dict, ui_schema: dict, state=None, parent=None) -> widgets.SchemaWidgetMixin:
         schema = self.schema.resolve_schema(schema)
 
-        if has_schema_type(schema):
+        if is_const(schema):
+            # check first as other types can be const
+            schema_type='const'
+        elif has_schema_type(schema):
             schema_type = get_schema_type(schema)
         elif is_enum(schema):
             # schema created with pydantic do not have a type key for enum-values, always.

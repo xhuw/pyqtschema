@@ -52,7 +52,7 @@ class AnyOfSchemaWidget(SchemaWidgetMixin, QGroupBox):
         self.select_combo.currentIndexChanged.connect(self.select_schema)
 
         lay = QVBoxLayout()
-        self.items_group = QGroupBox()
+        self.items_group = QWidget()
         self.items_group.setLayout(lay)
 
         layout = QVBoxLayout()

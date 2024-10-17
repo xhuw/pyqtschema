@@ -8,5 +8,6 @@ from .numeric import SpinSchemaWidget, SpinDoubleSchemaWidget, IntegerRangeSchem
 from .paths import FilepathSchemaWidget, DirectoryPathSchemaWidget
 from .root import FormWidget
 from .text import TextSchemaWidget, TextAreaSchemaWidget, PasswordWidget
+from .const import ConstSchemaWidget
 
 from .base import SchemaWidgetMixin

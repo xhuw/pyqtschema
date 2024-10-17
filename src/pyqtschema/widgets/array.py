@@ -7,13 +7,14 @@ from qtpy.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QStyl
 from pyqtschema.widgets.base import SchemaWidgetMixin, state_property
 from pyqtschema.widgets.utils import iter_layout_widgets, is_concrete_schema
 
+import sys
 
 class ArrayControlsWidget(QWidget):
     on_delete = Signal()
     on_move_up = Signal()
     on_move_down = Signal()
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, can_be_deleted, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         style = self.style()
@@ -34,7 +35,8 @@ class ArrayControlsWidget(QWidget):
         self.setLayout(group_layout)
         group_layout.addWidget(self.up_button)
         group_layout.addWidget(self.down_button)
-        group_layout.addWidget(self.delete_button)
+        if can_be_deleted:
+            group_layout.addWidget(self.delete_button)
         group_layout.setSpacing(0)
         group_layout.addStretch(0)
 
@@ -82,6 +84,9 @@ class ArraySchemaWidget(SchemaWidgetMixin, QGroupBox):
         self.rows[index].widget.handle_error(tail, err)
 
     def configure(self):
+        self._max_items = self.schema.get("maxItems", sys.maxsize)
+        self._min_items = self.schema.get("minItems", 0)
+        self._can_change_length = self._max_items != self._min_items
         layout = QVBoxLayout()
         style = self.style()
 
@@ -99,7 +104,8 @@ class ArraySchemaWidget(SchemaWidgetMixin, QGroupBox):
 
         self.on_changed.connect(self._on_updated)
 
-        layout.addWidget(self.add_button)
+        if self._can_change_length:
+            layout.addWidget(self.add_button)
         layout.addWidget(array_widget)
         self.setLayout(layout)
 
@@ -174,7 +180,7 @@ class ArraySchemaWidget(SchemaWidgetMixin, QGroupBox):
         # Create widget
         item_ui_schema = self.ui_schema.get("items", {})
         widget = self.widget_builder.create_widget(item_schema, item_ui_schema, item_state, parent=self)
-        controls = ArrayControlsWidget()
+        controls = ArrayControlsWidget(self._can_change_length)
 
         # Create row
         row = ArrayRowWidget(widget, controls)
