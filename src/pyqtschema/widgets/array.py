@@ -86,6 +86,7 @@ class ArraySchemaWidget(SchemaWidgetMixin, QGroupBox):
     def configure(self):
         self._max_items = self.schema.get("maxItems", sys.maxsize)
         self._min_items = self.schema.get("minItems", 0)
+        self._show_reorder_buttons = self.ui_schema.get("ui:show_reorder_buttons", True)
         self._can_change_length = self._max_items != self._min_items
         layout = QVBoxLayout()
         style = self.style()
@@ -184,6 +185,7 @@ class ArraySchemaWidget(SchemaWidgetMixin, QGroupBox):
 
         # Create row
         row = ArrayRowWidget(widget, controls)
+        row.controls.setHidden(not self._show_reorder_buttons)
         row.layout().setContentsMargins(0, 0, 0, 0)
 
         self.array_layout.addWidget(row)
