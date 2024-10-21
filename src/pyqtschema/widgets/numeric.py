@@ -48,6 +48,7 @@ class SpinDoubleSchemaWidget(SchemaWidgetMixin, QDoubleSpinBox):
         self.setValue(state)
 
     def configure(self):
+        self.setDecimals(3)
         self.valueChanged.connect(self.on_changed.emit)
 
         minimum, maximum = range_from_schema(self.schema)
