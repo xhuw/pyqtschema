@@ -35,6 +35,12 @@ class SchemaWidgetMixin:
 
         self.on_changed.connect(lambda _: self.clear_error())
 
+        
+        self._description = self.schema.get("description", "")
+
+        if self._description:
+            self.setToolTip(self._description)
+
         self._show_title: bool = kwargs.get('show_title', True)
         self.configure()
 
@@ -68,4 +74,4 @@ class SchemaWidgetMixin:
         palette.setColor(self.backgroundRole(), colour)
 
         self.setPalette(palette)
-        self.setToolTip("" if error is None else error.message)  # TODO
+        self.setToolTip(self._description if error is None else error.message)  # TODO
