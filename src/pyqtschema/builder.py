@@ -39,7 +39,7 @@ class IBuilder:
 class WidgetBuilder(IBuilder):
     default_widget_map = {
         "boolean": {"checkbox": widgets.CheckboxSchemaWidget, "enum": widgets.EnumSchemaWidget},
-        "object": {"object": widgets.ObjectSchemaWidget, "enum": widgets.EnumSchemaWidget},
+        "object": {"object": widgets.ObjectSchemaWidget, "enum": widgets.EnumSchemaWidget, "tab": widgets.TabSchemaWidget},
         "number": {"spin": widgets.SpinDoubleSchemaWidget, "text": widgets.TextSchemaWidget,
                    "enum": widgets.EnumSchemaWidget},
         "string": {"textarea": widgets.TextAreaSchemaWidget, "text": widgets.TextSchemaWidget,

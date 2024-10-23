@@ -2,7 +2,7 @@ from collections import OrderedDict
 from functools import partial
 from typing import Dict, List
 
-from qtpy.QtWidgets import QWidget, QVBoxLayout, QComboBox, QGroupBox
+from qtpy.QtWidgets import QWidget, QVBoxLayout, QComboBox, QGroupBox, QStackedLayout
 
 from ..schema import Schema
 from .base import state_property, SchemaWidgetMixin
@@ -51,7 +51,7 @@ class AnyOfSchemaWidget(SchemaWidgetMixin, QGroupBox):
         self.select_combo = QComboBox()
         self.select_combo.currentIndexChanged.connect(self.select_schema)
 
-        lay = QVBoxLayout()
+        lay = QStackedLayout()
         self.items_group = QWidget()
         self.items_group.setLayout(lay)
 
@@ -61,8 +61,7 @@ class AnyOfSchemaWidget(SchemaWidgetMixin, QGroupBox):
         self.setLayout(layout)
 
     def select_schema(self, idx: int):
-        for iii, widget in enumerate(iter_layout_widgets(self.items_group.layout())):
-            widget.setVisible(iii == idx)
+        self.items_group.layout().setCurrentIndex(idx)
         self.on_changed.emit(self.state)
 
     def populate_from_schema(self, schema: dict, ui_schema: dict, widget_builder: 'WidgetBuilder'
