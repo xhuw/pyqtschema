@@ -35,6 +35,8 @@ class SpinSchemaWidget(SchemaWidgetMixin, QSpinBox):
 
         if "multipleOf" in self.schema:
             self.setSingleStep(self.schema["multipleOf"])
+        elif maximum is not None and minimum is not None:
+            self.setSingleStep((maximum-minimum)/20)
 
 
 class SpinDoubleSchemaWidget(SchemaWidgetMixin, QDoubleSpinBox):
@@ -61,6 +63,8 @@ class SpinDoubleSchemaWidget(SchemaWidgetMixin, QDoubleSpinBox):
 
         if "multipleOf" in self.schema:
             self.setSingleStep(self.schema["multipleOf"])
+        elif maximum is not None and minimum is not None:
+            self.setSingleStep((maximum-minimum)/20)
 
 
 class IntegerRangeSchemaWidget(SchemaWidgetMixin, QSlider):
